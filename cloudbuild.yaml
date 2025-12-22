@@ -1,0 +1,17 @@
+# More info: https://cloud.google.com/build/docs/build-config
+
+steps:
+  # Build the container image
+  - id: "build image"
+    name: "gcr.io/cloud-builders/docker"
+    args: [ "build", "-t", "${_IMAGE_TAG}", "." ]
+
+  
+# Substitutions (more substitutions within the trigger on Google Cloud Build)
+substitutions:
+  _IMAGE_TAG: ${_REPOSITORY_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}:${COMMIT_SHA}
+
+# Stores the built image to the artifact repository and add details to the build description
+# https://cloud.google.com/build/docs/building/build-containers#store-images
+images:
+  - '${_IMAGE_TAG}'
