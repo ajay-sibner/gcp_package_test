@@ -1,0 +1,33 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[source]]
+url = "https://europe-west1-python.pkg.dev/sibner-dev-cloud-1131/sibner-permissions/simple"
+verify_ssl = true
+name = "artifact-registry"
+
+[packages]
+django = "==5.2.7"
+sibner_permissions = {version = "==0.1", index = "artifact-registry"}
+
+[dev-packages]
+black = "==25.9.0"
+
+[requires]
+python_version = "3.14"
+
+[pipenv]
+disable_pip_input = false
+
+
+#  pip install --extra-index-url https://europe-west1-python.pkg.dev/sibner-dev-cloud-1131/sibner-permissions/simple sibner_permissions==0.1
+
+# export PIP_EXTRA_INDEX_URL=https://europe-west1-python.pkg.dev/sibner-dev-cloud-1131/sibner-permissions/simple
+# pipenv lock --clear
+
+# sibner_permissions = { git = "ssh://git@github.com/SibnerPartnership/ServicePermissions.git", ref = "v0.1" }
+
+
+# pip install keyrings.google-artifactregistry-auth
