@@ -1,6 +1,14 @@
 # More info: https://cloud.google.com/build/docs/build-config
 
 steps:
+  # Fetch the access token
+  - id: "fetch token"
+    name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud auth print-access-token > /workspace/token
 
   # Build the container image
   - id: "build image"
@@ -10,7 +18,7 @@ steps:
       - '-c'
       - |
         docker build \
-          --build-arg AR_AUTH_TOKEN=$(gcloud auth print-access-token) \
+          --build-arg AR_AUTH_TOKEN=$(cat /workspace/token) \
           -t "${_IMAGE_TAG}" \
           .
 
