@@ -9,7 +9,7 @@ verify_ssl = true
 name = "artifact-registry"
 
 [packages]
-django = "==5.2.7"
+requests = "==2.32.5"
 sibner_permissions = {version = "==0.1", index = "artifact-registry"}
 
 [dev-packages]
