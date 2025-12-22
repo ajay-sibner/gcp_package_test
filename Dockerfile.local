@@ -1,0 +1,50 @@
+# Dockerfile.local
+# This Dockerfile is for LOCAL DEVELOPMENT ONLY.
+
+FROM python:3.14-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /code
+
+# 1. Install dependencies for Google Cloud SDK
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl \
+    gnupg \
+    ca-certificates \
+    g++ \
+    libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# 3. Install keyring backend
+RUN pip install keyrings.google-artifactregistry-auth
+
+# 4. Copy Pipfiles
+COPY Pipfile Pipfile.lock ./
+
+RUN echo "\n[pipenv]\ndisable_pip_input = false\n" >> Pipfile
+
+# Option A: Build with a secret (Recommended)
+#   docker build -f Dockerfile.local --secret id=google_creds,src=/path/to/key.json .
+#   (And you would need to set GOOGLE_APPLICATION_CREDENTIALS to point to the mounted secret, 
+#    but secrets are usually mounted at /run/secrets/google_creds)
+#
+# Option B: Copy a key file (Easier for quick local test, but DO NOT COMMIT KEY)
+#   COPY service-account-key.json /tmp/key.json
+#   ENV GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json
+
+# Assuming the user will mount the secret or copy the key. 
+# For now, we'll try to use the keyring. If GOOGLE_APPLICATION_CREDENTIALS is set in the build env, it works.
+
+RUN pip install pipenv
+
+RUN --mount=type=secret,id=google_creds \
+    export GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/google_creds && \
+    pipenv sync --dev --system --verbose
+
+
+# export GOOGLE_APPLICATION_CREDENTIALS="key.json"
+# docker build -f Dockerfile.local \                                                                 
+#   --secret id=google_creds,src=$GOOGLE_APPLICATION_CREDENTIALS \
