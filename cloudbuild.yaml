@@ -4,7 +4,14 @@ steps:
   # Build the container image
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
-    args: [ "build", "-t", "${_IMAGE_TAG}", "." ]
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker build \
+          --build-arg AR_AUTH_TOKEN=$(gcloud auth print-access-token) \
+          -t "${_IMAGE_TAG}" \
+          .
 
   
 # Substitutions (more substitutions within the trigger on Google Cloud Build)

@@ -12,5 +12,8 @@ RUN apt-get update &&  \
 # Copy the requirements file and install
 COPY Pipfile Pipfile.lock ./
 
-RUN pip install pipenv keyrings.google-artifactregistry-auth
-RUN pipenv sync --dev --system
+ARG AR_AUTH_TOKEN
+RUN echo "machine europe-west1-python.pkg.dev login oauth2accesstoken password $AR_AUTH_TOKEN" > ~/.netrc
+
+RUN pip install pipenv
+RUN pipenv sync --dev --system && rm ~/.netrc
