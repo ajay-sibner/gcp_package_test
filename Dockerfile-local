@@ -24,10 +24,10 @@ RUN pip install keyrings.google-artifactregistry-auth
 # 4. Copy Pipfiles
 COPY Pipfile Pipfile.lock ./
 
-RUN echo "\n[pipenv]\ndisable_pip_input = false\n" >> Pipfile
+# RUN echo "\n[pipenv]\ndisable_pip_input = false\n" >> Pipfile
 
 # Option A: Build with a secret (Recommended)
-#   docker build -f Dockerfile.local --secret id=google_creds,src=/path/to/key.json .
+#   docker build -f Dockerfile-local --secret id=google_creds,src=./key.json .
 #   (And you would need to set GOOGLE_APPLICATION_CREDENTIALS to point to the mounted secret, 
 #    but secrets are usually mounted at /run/secrets/google_creds)
 #
@@ -48,3 +48,6 @@ RUN --mount=type=secret,id=google_creds \
 # export GOOGLE_APPLICATION_CREDENTIALS="key.json"
 # docker build -f Dockerfile.local \                                                                 
 #   --secret id=google_creds,src=$GOOGLE_APPLICATION_CREDENTIALS \
+
+
+# docker build -f Dockerfile-local --secret id=google_creds,src=./key.json .

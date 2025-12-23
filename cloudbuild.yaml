@@ -19,6 +19,7 @@ steps:
       - |
         docker build \
           --build-arg AR_AUTH_TOKEN=$(cat /workspace/token) \
+          --build-arg BACKEND_NAME="main" \
           -t "${_IMAGE_TAG}" \
           .
 
